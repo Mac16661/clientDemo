@@ -10,13 +10,10 @@ const headers = {
 function App() {
   const [JWT, setJWT] = useState();
   const [ads, setAds] = useState([]);
+  const [data, setData] = useState([]);
 
   // TODO: User authentication and ads socket connection
-
-  //
   useEffect(() => {
-    // socket.connect();
-
     // Sending audio data
     function sendData(data) {
       var form = new FormData();
@@ -27,6 +24,9 @@ function App() {
         .post("http://127.0.0.1:5000/save-record", form, { headers })
         .then((response) => {
           console.log(response.data);
+          if (response.data.length > 0) {
+            setData(response.data);
+          }
         })
         .catch((error) => {
           console.error(error);
@@ -83,24 +83,18 @@ function App() {
         });
     };
 
-    audioHandler()
+    audioHandler();
 
-    // socket.on("connect");
-    // console.log(socket);
-
-    return () => {
-      // socket.disconnect();
-      // socket.off("connect");
-    };
+    return () => {};
   }, []);
 
   return (
     <div className="App">
       <p>hello Ads</p>
-      {ads.map((ad) => (
-        <div>
+      {data.map((ad) => (
+        <div key={ad.id}>
+          <img src={ad.image} alt="img" width="200" height="200" />
           <p>{ad.name}</p>
-          <p>{ad.age}</p>
         </div>
       ))}
     </div>
